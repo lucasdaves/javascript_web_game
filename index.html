@@ -1,0 +1,45 @@
+<html>
+<head>
+<title>CURSED FOREST - Tela Menu</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+	body {
+		background: black;
+		background-image: url('imagem/fundo.png');
+	  	background-repeat: no-repeat;
+		border: none;}
+
+	#botaoPlay {
+		 position: absolute;
+		top: 360px;
+		left: 640px;}
+
+	#logoJogo {
+		position: absolute;
+		top: 120px;
+		left: 340px;}
+
+	#botaoMusica{
+		position: absolute;
+		top: 200px;
+		left: 20px;}
+
+	#versao {
+		position: absolute;
+		top: 600px;
+		left: 20px;
+	}
+</style>
+</head>
+<body>
+
+<img id="logoJogo" src="imagem/logo.png"/>
+<img id="versao" src="imagem/versao.png"/>
+<img id="botaoMusica" src="imagem/som.png" onclick="javascript: som.paused ? som.play(): som.pause();"/>
+
+<a href="jogo.html"> <img id="botaoPlay" src="imagem/jogar.png" onmouseover="this.src ='imagem/jogarON.png'" onmouseout="this.src ='imagem/jogar.png'"> </a>
+
+<audio loop autoplay id="som"> <source src="som/musicaMenu.ogg"> </audio>
+
+</body>
+</html>

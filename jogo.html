@@ -1,0 +1,321 @@
+<html>
+<head>
+<title>CURSED FOREST - Tela Jogo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+    body{
+        background: black;
+        background-image: url('imagem/fundoJogo.png');
+        background-repeat: no-repeat;
+		border: none;
+	}
+
+    #botaoGuerreiro{
+        position: absolute;
+        top: 20px;
+        left: 350px;
+    }
+
+    #botaoArqueiro{
+        position: absolute;
+        top: 20px;
+        left: 450px;
+    }
+		
+    #botaoMago{
+        position: absolute;
+        top: 20px;
+        left: 550px;
+    }
+	
+    #botaoParalisa{
+		position: absolute;
+		top: 20px;
+       	left: 650px;
+    }
+
+    #botaoVelocidade{
+		position: absolute;
+		top: 20px;
+       	left: 750px;
+    }
+
+    #botaoExplosao{
+		position: absolute;
+		top: 20px;
+        left: 850px;
+    }
+		
+    #botaoCura{
+		position: absolute;
+		top: 20px;
+      	left: 950px;
+    }
+
+    #torreAliada{
+        position: absolute;
+        top: 210px;
+        left: 0px;
+    }
+
+    #torreInimiga{
+        position: absolute;
+        top: 210px;
+        left: 1480px;
+    }
+		
+    #botaoMusica{
+        position: absolute;
+        top: 200px;
+        left: 20px;
+    }
+		
+	#botaoUpgrade{
+        position: absolute;
+        top: 130px;
+        left: 250px;
+    }
+		
+	#inicio{
+		font-family: "Verdana";
+		position: absolute;
+		top: 235;
+		left: 740;
+		margin: auto;
+		width: 200px;
+		height: 300px;
+		padding: 15px;
+		border: solid 2px #a3002b;
+		background: #141427;
+		display: block;
+	}
+
+	.sangue{
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        display: none;
+    }
+		
+	.fim{
+		font-family: "Verdana";
+		position: absolute;
+		top: 280;
+		left: 615;
+		margin: auto;
+		width: 450px;
+		height: 150px;
+		padding: 15px;
+		border: solid 2px #a3002b;
+		background: #141427;
+		display: none;
+	}
+
+	.info{
+		font-family: "Verdana";
+		text-align: center;
+		vertical-align: middle;
+		position: absolute;
+		top: 20;
+		left: 1050;
+		display: inline-block;
+		width: 200px;
+		padding: 15px;
+		border: solid 2px #a3002b;
+		background: #141427;
+		display: none;
+	}
+
+</style>
+</head>
+<body>
+
+<canvas width="1680" height="720" id="game"></canvas>
+
+<img id="torreAliada" src="imagem/torreAliada.png"/>
+<img id="torreInimiga" src="imagem/torreInimiga.png"/>
+<img id="botaoGuerreiro" src="imagem/botaoGuerreiro.png" onclick="geraAliado('guerreiro')" onmouseover="informacao('guerreiro',1)" onmouseout="informacao('guerreiro',2)"/>
+<img id="botaoArqueiro" src="imagem/botaoArqueiro.png" onclick="geraAliado('arqueiro')" onmouseover="informacao('arqueiro',1)" onmouseout="informacao('arqueiro',2)"/>
+<img id="botaoMago" src="imagem/botaoMago.png"  onclick="geraAliado('mago')" onmouseover="informacao('mago',1)" onmouseout="informacao('mago',2)"/>
+<img id="botaoUpgrade" src="imagem/up.png" onclick="up()" onmouseover="informacao('upgrade',1)" onmouseout="informacao('upgrade',2)"/>
+<img id="botaoExplosao" src="imagem/botaoExplosao.png" onclick="habilidade('explosao',jogador2)" onmouseover="informacao('explosao',1)" onmouseout="informacao('explosao',2)"/>
+<img id="botaoParalisa" src="imagem/botaoParalisa.png" onclick="habilidade('paralisa',jogador2)" onmouseover="informacao('paralisa',1)" onmouseout="informacao('paralisa',2)"/>
+<img id="botaoCura" src="imagem/botaoCura.png" onclick="habilidade('cura',jogador1)" onmouseover="informacao('cura',1)" onmouseout="informacao('cura',2)"/>
+<img id="botaoVelocidade" src="imagem/botaoVelocidade.png" onclick="habilidade('velocidade',jogador1)" onmouseover="informacao('velocidade',1)" onmouseout="informacao('velocidade',2)"/>
+<img id="botaoMusica" src="imagem/som.png"  onclick="javascript: som.paused ? som.play() : som.pause();" onmouseover="informacao('musica',1)" onmouseout="informacao('musica',2)"/>
+<img id="sangueAliado" class="sangue" src="imagem/blood.gif"/>
+<img id="sangueInimigo" class="sangue" src="imagem/blood.gif"/>
+
+<audio id="canhaoSom"> <source src="som/canhao.mp3"> </audio>
+<audio id="morteSom"> <source src="som/morte.mp3"> </audio>
+<audio id="espadaSom"> <source src="som/espada.mp3"> </audio>
+<audio id="flechaSom"> <source src="som/flecha.mp3"> </audio>
+<audio id="cajadoSom"> <source src="som/cajado.mp3"> </audio>
+<audio autoplay loop id="som"> <source src="som/musicaJogo.ogg"> </audio>
+
+
+<div id="vitoria" class="fim"> 
+	<center><font color="red" size="6"><strong>A floresta te venera !</strong>
+	<p><a href="index.html"> <img src="imagem/menu.png" onmouseover="this.src ='imagem/menuON.png'" onmouseout="this.src ='imagem/menu.png'"> </a></center></p>
+</div>
+
+<div id="derrota" class="fim"> 
+	<center><font color="red" size="6"><strong>A floresta te consome !</strong>
+	<p><a href="index.html"> <img src="imagem/menu.png" onmouseover="this.src ='imagem/menuON.png'" onmouseout="this.src ='imagem/menu.png'"> </a></center></p>
+</div>
+
+<div id="guerreiro" class="info"> 
+	<font color="red" size="4"> Vida: 60 <br> Defesa: 25% <br> Dano: 12 <br> Alcance: 50 <br> Velocidade: 100%
+</div>
+
+<div id="arqueiro" class="info"> 
+	<font color="red" size="4"> Vida: 50 <br> Defesa: 10% <br> Dano: 10 <br> Alcance: 250 <br> Velocidade: 140%
+</div>
+
+<div id="mago" class="info"> 
+	<font color="red" size="4"> Vida: 40 <br> Defesa: 0%  <br> Dano: 15<br> Alcance: 200 <br> Velocidade: 120%
+</div>
+
+<div id="velocidade" class="info"> 
+	<font color="red" size="4"> Aumenta a velocidade das unidades em 50% por 15 segundos.
+</div>
+
+<div id="explosao" class="info"> 
+	<font color="red" size="4"> Causa dano de 20% da vida maxima dos inimigos a cada segundo por 5 segundos.
+</div>
+
+<div id="cura" class="info"> 
+	<font color="red" size="4"> Cura as unidades aliadas em 20% da vida maxima por segundo, durante 30 segundos.
+</div>
+
+<div id="upgrade" class="info"> 
+	<font color="red" size="4"> Aumenta 10% dos atributos das unidades por nivel. Aumenta o dano da torre e a quantidade de mana.
+</div>
+
+<div id="paralisa" class="info"> 
+	<font color="red" size="4"> Paralisa os inimigos por 5 segundos, impossibilitando-os de movimentar ou atacar.
+</div>
+
+<div id="musica" class="info"> 
+	<font color="red" size="4"> Play/Pause da musica.
+</div>
+
+<div id="inicio"> 
+	<center><font color="red" size="6"><strong>Dificuldade</strong>
+	<p><img src="imagem/facil.png" onmouseover="this.src ='imagem/facilON.png'" onmouseout="this.src ='imagem/facil.png'" onclick="alteraDificuldade(1)"></p>
+	<p><img src="imagem/medio.png" onmouseover="this.src ='imagem/medioON.png'" onmouseout="this.src ='imagem/medio.png'" onclick="alteraDificuldade(2)"></p>
+	<p><img src="imagem/dificil.png" onmouseover="this.src ='imagem/dificilON.png'" onmouseout="this.src ='imagem/dificil.png'" onclick="alteraDificuldade(3)"></p>
+	<p><img src="imagem/horda.png" onmouseover="this.src ='imagem/hordaON.png'" onmouseout="this.src ='imagem/horda.png'" onclick="alteraDificuldade(4)"></p></center>
+</div>
+
+<script src="javascript/imagens.js"> </script>
+<script src="javascript/classes.js"> </script>
+
+<script>
+var canvas = document.getElementById("game");
+var ctx = canvas.getContext("2d");
+
+var jogador1 = new estrutura(200, 7, 20, 1.5, 250, 0, 200, 200, 500, 1) ;
+var jogador2 = new estrutura(200, 7, 20, 1.5, 250, 1460, 200, 200, 500, 2);
+var inicio = false;
+
+function geraAliado(z) {
+	if (jogador1.vet.length<= jogador1.vetMax) {
+		if (z == "guerreiro" && jogador1.mana >= 20 && recarga.guerreiro === 0) jogador1.insereUnidade(unidade.guerreiro(1));
+		if (z == "arqueiro" && jogador1.mana >= 30 && recarga.arqueiro === 0) jogador1.insereUnidade(unidade.arqueiro(1));
+		if (z == "mago" && jogador1.mana >= 40 && recarga.mago === 0) jogador1.insereUnidade(unidade.mago(1));
+	}
+}
+
+function informacao(z,y) {
+	if(y == 1) document.getElementById(z).style.display = 'block';
+	else document.getElementById(z).style.display = 'none';
+}
+
+function alteraDificuldade(j) {
+	if (j == 1) {
+		dificuldade.facil(jogador2);
+		game();
+	}
+	else if (j == 2) {
+		dificuldade.medio(jogador2);
+		game();
+	}
+	else if (j == 3) {
+		dificuldade.dificil(jogador2);
+		game();
+	}
+	else if (j == 4) {
+		dificuldade.horda(jogador2);
+		game();
+	}
+}
+
+function up() {if(inicio) {upgrade.levelUp(jogador1);}}
+
+function habilidade(x, y) {jogador1.habilidades(x, y);}
+
+function clear() {ctx.clearRect(0, 0, canvas.width, canvas.height);}
+
+function atualizaUnidade(){
+	for (var i = 0; i<jogador1.vet.length; i++){
+		if (typeof jogador1.vet[i] != 'undefined'){
+			jogador1.vet[i].unidadeMostraHP();
+			jogador1.vet[i].unidadeDesenha();
+			jogador1.vet[i].unidadeMovimenta(i,jogador1,jogador2);
+			jogador1.vet[i].unidadeDestruida(i,jogador1,jogador2);
+		}
+	}
+
+	for (var j = 0; j<jogador2.vet.length; j++){
+		if (typeof jogador2.vet[j] != 'undefined'){
+			jogador2.vet[j].unidadeMostraHP();
+			jogador2.vet[j].unidadeDesenha();
+			jogador2.vet[j].unidadeMovimenta(j,jogador1,jogador2);
+			jogador2.vet[j].unidadeDestruida(j,jogador1,jogador2);
+		}
+	}
+}
+
+function atualizaTorre() {
+	recarga.mostraRecarga();
+	if (typeof jogador2.vet[0] != 'undefined') jogador1.torreAtaca();
+	jogador1.torreDestruida();
+	jogador1.mostraVida(170, 45);
+	jogador1.mostraMana(170, 105);
+	jogador1.mostraLevel(170, 165);
+	upgrade.mostraUpgrade(jogador1);
+
+	if (typeof jogador1.vet[0] != 'undefined') jogador2.torreAtaca();
+	jogador2.torreDestruida();
+	jogador2.mostraHorda(1440,185);
+	jogador2.mostraMana(1400, 105);
+	jogador2.mostraVida(1400, 45);
+}
+
+function update() {
+	if (jogador1.hp > 0 && jogador2.hp > 0) {
+		requestAnimationFrame(update);
+    	clear();
+		atualizaUnidade();
+		atualizaTorre();
+	}
+}
+
+function game(){
+	som.play();
+	inicio = true;
+	document.getElementById("inicio").style.display = "none";
+	window.requestAnimationFrame(update);
+	recarga.inicializa();
+	upgrade.inicializa();
+
+	setInterval(function() {
+		recarga.atualizaRecarga();
+		jogador1.geraRecursos(upgrade.boostMp);
+		jogador2.geraRecursos(dificuldade.mana);
+	}, 1000);
+}
+</script>
+</body>
+</html>
